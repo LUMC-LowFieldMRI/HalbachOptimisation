@@ -9,17 +9,9 @@ import scipy.ndimage as nd
 
 mu = 1e-7
 
-def magnetization(bRem, dimensions, shape = 'cube', evalDistance = 1):
-    #Use the analytical expression for the z component of a cube magnet to estimate
-    #dipole momentstrength for correct scaling. Dipole approximation only valid 
-    #far-ish away from magnet, comparison made at 1 meter distance.
+def magnetization(bRem, dimensions, shape = 'cube'):
     if shape == 'cube':
-        b_analytic = (bRem/np.pi) *(np.arctan2(dimensions**2, 2*evalDistance *np.sqrt(4*(evalDistance**2) + 2*(dimensions**2)))-\
-                        np.arctan2(dimensions**2, 2*(dimensions + evalDistance)*\
-                                   np.sqrt(4*((dimensions+evalDistance)**2)+2*(dimensions**2))))
-    
-        dip_mom = b_analytic * (dimensions/2 + evalDistance)**3 /(2*mu) #strength of the dipole moment
-    
+        dip_mom = bRem * dimensions**3 / (4*np.pi*mu)
     return dip_mom
 
 def singleMagnet(position, dipoleMoment, simDimensions, resolution):
